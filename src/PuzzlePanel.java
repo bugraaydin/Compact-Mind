@@ -1,10 +1,12 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class PuzzlePanel extends JPanel{
@@ -17,24 +19,39 @@ public class PuzzlePanel extends JPanel{
 	static final int rectWidth = 100;
 	//
 	private HTMLProcessor input;
-	private int[][] puzzle;
 	//
+	private Control mouse;
+	//
+	public BufferedImage revealImage;
+	public BufferedImage startImage;
+	//
+	private boolean isRevealed;
+	private String[][] puzzle;
 	
 	public PuzzlePanel() throws Exception{
+		isRevealed = false;
+		try {
+			revealImage = ImageIO.read(getClass().getResourceAsStream("/resources/images/reveal_image.png"));
+		}	catch(IOException exc) {
+				exc.printStackTrace();
+		}
+		try {
+			startImage = ImageIO.read(getClass().getResourceAsStream("/resources/images/start_image.png"));
+		}	catch(IOException exc) {
+				exc.printStackTrace();
+		}
+		puzzle = new String[5][5];
+		for(int i = 0;i<puzzleSize;i++){
+			for(int j = 0;j<puzzleSize;j++){
+				puzzle[i][j] = "";
+			}
+		}
+		mouse = new Control(); // mouse adapter
+		addMouseListener(mouse);
 		input = new HTMLProcessor(); //HTML saver
 		Dimension screen = new Dimension(SCREEN_HEIGHT,SCREEN_WIDTH);
 		setVisible(true);
 		this.setPreferredSize(screen);
-		//
-		puzzle = new int[puzzleSize][puzzleSize];
-		for(int i = 0; i < puzzleSize;i++){
-			for(int j = 0; j < puzzleSize; j++){
-				puzzle[i][j] = puzzleRect;
-			}
-		}
-		puzzle[0][0] = blankRect;
-		puzzle[0][1] = 1;
-		puzzle[3][0] = 2;
 		//
 	}
 	
@@ -44,17 +61,23 @@ public class PuzzlePanel extends JPanel{
 		g.setColor(Color.black);
 		int startX = 45;
 		int startY = 40;
+		
+		g.setFont(new Font("TimesRoman", Font.PLAIN, 20)); 
 		for(int i = 0; i < puzzleSize;i++){
 			for(int j = 0; j < puzzleSize;j++){
-				if(puzzle[i][j] == -1)
-					g.fillRect(startX, startY, rectWidth, rectWidth);
-				else if(puzzle[i][j] == 0){
+				if(input.puzzle[i][j].currentLetter == "-1")
+					g.fillRect(startX, startY, rectWidth, rectWidth); // -1 for blank
+				else if(input.puzzle[i][j].currentLetter != ""){
 					g.drawRect(startX, startY, rectWidth, rectWidth);
+					g.drawString(puzzle[i][j],startX+50,startY+60);
 				}
 				else{
 					g.drawRect(startX, startY, rectWidth, rectWidth);
+				} 
+				if(input.puzzle[i][j].questionNo != ""){
+					g.drawRect(startX, startY, rectWidth, rectWidth);
 					g.setFont(new Font("TimesRoman", Font.PLAIN, 20)); 
-					g.drawString(puzzle[i][j] + "", startX + 10, startY + 20);
+					g.drawString(input.puzzle[i][j].questionNo, startX + 10, startY + 20);
 				}
 				startY = startY + rectWidth + blankRectPixel;
 			}
@@ -84,17 +107,68 @@ public class PuzzlePanel extends JPanel{
 			g.drawString(input.hints[1].get(i), 630, hintY);
 			hintY = hintY + 30;
 		}
-		g.drawLine(0, 570, 1200, 570);
-		g.drawLine(0, 600, 1200, 600);
+		//GRAY RECTANGLE GUI COMPONENTS
 		g.setColor(Color.DARK_GRAY);
-		g.fillRect(0,570,1200,30);   ///GUI COMPONENTS
+		g.fillRect(0,570,1200,30); 
 		g.fillRect(0, 0, 1200, 30);
 		g.fillRect(0, 0, 30, 900);
 		g.fillRect(1155, 0, 30, 900);
 		g.fillRect(0, 825, 1200, 30);
+		/////////////////////////////
+		g.drawLine(0, 570, 1200, 570);
+		g.drawLine(0, 600, 1200, 600);
+
 		g.setColor(Color.BLUE);
+		// REVEAL/START IMAGES
+		g.drawImage(startImage, 600, 620, this);
+		g.drawImage(revealImage, 680, 620, this);
 		//
 		g.setColor(Color.WHITE);  //PRORAM LOG
-		g.fillRect(50, 620, 500, 180);
+		g.fillRect(50, 620, 520, 180);
+	}
+	public void reveal(){
+		if(isRevealed == false){
+			System.out.println("Reveal called");
+			for(int i = 0; i < puzzleSize;i++)
+				for(int j = 0; j < puzzleSize;j++)
+					puzzle[i][j] = input.puzzle[i][j].currentLetter;
+			isRevealed = true;
+			}
+		else{
+			System.out.println("Unreveal called");
+			for(int i = 0; i < puzzleSize;i++)
+				for(int j = 0; j < puzzleSize;j++)
+					puzzle[i][j] = "";
+			isRevealed = false;
+		}
+		repaint();
+		
+	}
+	public void start(){
+		System.out.println("Start called");
+	}
+	
+	//Mouse adapter
+	public class Control extends MouseAdapter{
+		
+		private int mouseX;
+		private int mouseY;
+		
+		public void mousePressed(MouseEvent e) {
+			mouseX = e.getX();
+			mouseY = e.getY(); 
+			if(mouseX >= 600 && mouseY >= 620 && mouseX <= 675 && mouseY <= 685){
+				start();
+				mouseX = 0;
+				mouseY = 0;
+			}
+			if(mouseX >= 680 && mouseY >= 620 && mouseX <= 755 && mouseY <= 685){
+				reveal();
+				mouseX = 0;
+				mouseY = 0;
+			}
+		}
+		
+
 	}
 }

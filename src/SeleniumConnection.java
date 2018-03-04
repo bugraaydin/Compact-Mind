@@ -53,11 +53,11 @@ public class SeleniumConnection {
             e.printStackTrace();
         }
         Scanner scan = new Scanner( pageSource);
-        String inputLine;
+        
         try {
-            while ((inputLine = scan.nextLine()) != null){
+            while (scan.hasNextLine()){
                 try{
-                    writer.write(inputLine);
+                    writer.write(scan.nextLine());
                 }
                 catch(IOException e){
 

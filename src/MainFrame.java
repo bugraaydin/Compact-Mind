@@ -5,12 +5,13 @@ import javax.swing.JFrame;
 
 public class MainFrame extends JFrame{
 
-	static final String title = "Origin";
+	static final String title = "Compact Mind";
 	
 	PuzzlePanel puzzle;
-	
+	SeleniumConnection connection;
 	public MainFrame() throws Exception{
 		init();
+		connection = new SeleniumConnection();
 		puzzle = new PuzzlePanel();
 		this.add(puzzle);
 		Dimension size = new Dimension(puzzle.SCREEN_WIDTH,puzzle.SCREEN_HEIGHT);
