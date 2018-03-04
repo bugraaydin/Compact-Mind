@@ -49,9 +49,11 @@ public class PuzzlePanel extends JPanel{
 		mouse = new Control(); // mouse adapter
 		addMouseListener(mouse);
 		input = new HTMLProcessor(); //HTML saver
-		Dimension screen = new Dimension(SCREEN_HEIGHT,SCREEN_WIDTH);
+		repaint();
+		Dimension screen = new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT);
 		setVisible(true);
 		this.setPreferredSize(screen);
+		repaint();
 		//
 	}
 	
@@ -112,8 +114,8 @@ public class PuzzlePanel extends JPanel{
 		g.fillRect(0,570,1200,30); 
 		g.fillRect(0, 0, 1200, 30);
 		g.fillRect(0, 0, 30, 900);
-		g.fillRect(1155, 0, 30, 900);
-		g.fillRect(0, 825, 1200, 30);
+		g.fillRect(1155, 0, 45, 900);
+		g.fillRect(0, 870, 1200, 30);
 		/////////////////////////////
 		g.drawLine(0, 570, 1200, 570);
 		g.drawLine(0, 600, 1200, 600);
@@ -124,7 +126,8 @@ public class PuzzlePanel extends JPanel{
 		g.drawImage(revealImage, 680, 620, this);
 		//
 		g.setColor(Color.WHITE);  //PRORAM LOG
-		g.fillRect(50, 620, 520, 180);
+		g.fillRect(50, 620, 520, 230);
+		repaint();
 	}
 	public void reveal(){
 		if(isRevealed == false){

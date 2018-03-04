@@ -70,9 +70,7 @@ public class SeleniumConnection {
             e.printStackTrace();
             return;
         }
-
-
-
-        webDriver.getPageSource();
+        webDriver.close();
+        webDriver.quit();
     }
 }
