@@ -4,6 +4,8 @@ import java.awt.Font;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -21,12 +23,16 @@ public class PuzzlePanel extends JPanel{
 	private HTMLProcessor input;
 	//
 	private Control mouse;
+	private KeyInput keyboard;
 	//
 	public BufferedImage revealImage;
 	public BufferedImage startImage;
 	//
 	private boolean isRevealed;
 	private String[][] puzzle;
+	//
+	public int selectedRectX = -1;
+	public int selectedRectY = -1;
 	
 	public PuzzlePanel() throws Exception{
 		isRevealed = false;
@@ -47,12 +53,18 @@ public class PuzzlePanel extends JPanel{
 			}
 		}
 		mouse = new Control(); // mouse adapter
+		keyboard = new KeyInput();
 		addMouseListener(mouse);
+		addKeyListener(keyboard);
+		this.setFocusable(true);
+		this.requestFocus();
 		input = new HTMLProcessor(); //HTML saver
 		repaint();
 		Dimension screen = new Dimension(SCREEN_WIDTH,SCREEN_HEIGHT);
 		setVisible(true);
 		this.setPreferredSize(screen);
+		this.setFocusable(true);
+		this.requestFocus();
 		repaint();
 		//
 	}
@@ -150,7 +162,11 @@ public class PuzzlePanel extends JPanel{
 	public void start(){
 		System.out.println("Start called");
 	}
-	
+	public void selectRect(int x,int y){
+		selectedRectX = x;
+		selectedRectY = y;
+		System.out.println(x +","+ y);
+	}
 	//Mouse adapter
 	public class Control extends MouseAdapter{
 		
@@ -170,8 +186,107 @@ public class PuzzlePanel extends JPanel{
 				mouseX = 0;
 				mouseY = 0;
 			}
+			/////// 0 Y
+			if(mouseX >= 45 && mouseY >= 40 && mouseX <= 145 && mouseY <= 140){
+				selectRect(0,0);
+			}
+			if(mouseX >= 147 && mouseY >= 40 && mouseX <= 245 && mouseY <= 140){
+				selectRect(0,1);
+			}
+			if(mouseX >= 247 && mouseY >= 40 && mouseX <= 345 && mouseY <= 140){
+				selectRect(0,2);
+			}
+			if(mouseX >= 347 && mouseY >= 40 && mouseX <= 445 && mouseY <= 140){
+				selectRect(0,3);
+			}
+			if(mouseX >= 447 && mouseY >= 40 && mouseX <= 545 && mouseY <= 140){
+				selectRect(0,4);
+			}
+			////////////// 1 Y
+			if(mouseX >= 45 && mouseY >= 142 && mouseX <= 145 && mouseY <= 240){
+				selectRect(1,0);
+			}
+			if(mouseX >= 147 && mouseY >= 142 && mouseX <= 245 && mouseY <= 240){
+				selectRect(1,1);
+			}
+			if(mouseX >= 247 && mouseY >= 142 && mouseX <= 345 && mouseY <= 240){
+				selectRect(1,2);
+			}
+			if(mouseX >= 347 && mouseY >= 142 && mouseX <= 445 && mouseY <= 240){
+				selectRect(1,3);
+			}
+			if(mouseX >= 447 && mouseY >= 142 && mouseX <= 545 && mouseY <= 240){
+				selectRect(1,4);
+			}			
+			////////// 2 Y
+			if(mouseX >= 45 && mouseY >= 242 && mouseX <= 145 && mouseY <= 340){
+				selectRect(2,0);
+			}
+			if(mouseX >= 147 && mouseY >= 242 && mouseX <= 245 && mouseY <= 340){
+				selectRect(2,1);
+			}
+			if(mouseX >= 247 && mouseY >= 242 && mouseX <= 345 && mouseY <= 340){
+				selectRect(2,2);
+			}
+			if(mouseX >= 347 && mouseY >= 242 && mouseX <= 445 && mouseY <= 340){
+				selectRect(2,3);
+			}
+			if(mouseX >= 447 && mouseY >= 242 && mouseX <= 545 && mouseY <= 340){
+				selectRect(2,4);
+			}
+			///// 3 Y
+			if(mouseX >= 45 && mouseY >= 342 && mouseX <= 145 && mouseY <= 440){
+				selectRect(3,0);
+			}
+			if(mouseX >= 147 && mouseY >= 342 && mouseX <= 245 && mouseY <= 440){
+				selectRect(3,1);
+			}
+			if(mouseX >= 247 && mouseY >= 342 && mouseX <= 345 && mouseY <= 440){
+				selectRect(3,2);
+			}
+			if(mouseX >= 347 && mouseY >= 342 && mouseX <= 445 && mouseY <= 440){
+				selectRect(3,3);
+			}
+			if(mouseX >= 447 && mouseY >= 342 && mouseX <= 545 && mouseY <= 440){
+				selectRect(3,4);
+			}
+			////// 4 Y
+			if(mouseX >= 45 && mouseY >= 442 && mouseX <= 145 && mouseY <= 540){
+				selectRect(4,0);
+			}
+			if(mouseX >= 147 && mouseY >= 442 && mouseX <= 245 && mouseY <= 540){
+				selectRect(4,1);
+			}
+			if(mouseX >= 247 && mouseY >= 442 && mouseX <= 345 && mouseY <= 540){
+				selectRect(4,2);
+			}
+			if(mouseX >= 347 && mouseY >= 442 && mouseX <= 445 && mouseY <= 540){
+				selectRect(4,3);
+			}
+			if(mouseX >= 447 && mouseY >= 442 && mouseX <= 545 && mouseY <= 540){
+				selectRect(4,4);
+			}
 		}
-		
+	}
+	/// MOUSE LISTENER END
+	public class KeyInput implements KeyListener{
 
+		@Override
+		public void keyPressed(KeyEvent e) {
+			char c = e.getKeyChar();
+			if((int)c == 8){
+				puzzle[selectedRectY][selectedRectX] = "";
+				return;
+			}
+			String inp = "" + c;
+			inp = inp.toUpperCase();
+			if(selectedRectX == -1 && selectedRectY == -1)
+				return;
+			puzzle[selectedRectY][selectedRectX] = inp;
+			repaint();
+		}
+		@Override
+		public void keyReleased(KeyEvent e) {}
+		public void keyTyped(KeyEvent e) {}
 	}
 }

@@ -12,6 +12,7 @@ public class MainFrame extends JFrame{
 	public MainFrame() throws Exception{
 		LoadingScreen loading = new LoadingScreen();
 		this.add(loading);
+		this.setFocusable(true);
 		Dimension size = new Dimension(1200,900);
 		setSize(size);
 		init();
@@ -20,6 +21,7 @@ public class MainFrame extends JFrame{
 		loading.setVisible(false);
 		this.remove(loading);
 		this.add(puzzle);
+		puzzle.requestFocus();
 		pack();
 		repaint();
 	}
