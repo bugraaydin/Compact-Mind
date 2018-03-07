@@ -4,8 +4,8 @@ import java.util.*;
 
 public class HTMLProcessor{
 
-	private ArrayList<String>[] hints;
-	private CellBlock[][] puzzle;
+	public ArrayList<String>[] hints;
+	public CellBlock[][] puzzle;
 	
 	
     public HTMLProcessor() throws Exception {
@@ -32,6 +32,7 @@ public class HTMLProcessor{
 			fileReader.close();
 		} catch (IOException e) {
 			System.out.print("");
+			return;
 		}
 		content = contentBuilder.toString();
 		parsePuzzle( content);
@@ -39,6 +40,13 @@ public class HTMLProcessor{
 
 
 	private void parsePuzzle(String content){
+		hints = new ArrayList[2];
+		hints[0] = new ArrayList<String>();
+		hints[1] = new ArrayList<String>();
+		puzzle = new CellBlock[5][5];
+		for(int i = 0;i < 5;i++)
+			for(int j = 0; j<5;j++)
+				puzzle[i][j] = new CellBlock();
 		String hintNoPattern = "\"Clue-label--";
 		String hintPattern = "\"Clue-text--";
 		int acrossDown = 0; // 0 for across, 1 for down
